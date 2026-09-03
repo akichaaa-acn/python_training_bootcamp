@@ -59,7 +59,7 @@ def validate_email(email):
 def user_input():
     print("\nPlease provide the following information:")
     while True:
-        name = input("Enter your name: ").strip
+        name = input("Enter your name: ").strip()
         if name:
             break
         print("⇒ Name cannot be empty. Please enter your name.")
@@ -75,9 +75,10 @@ def user_input():
 
     while True:
         address = input("Enter your address: ").strip()
-        if address:
+        if address == "":
+            print("⇒ Address cannot be empty. Please enter your address.")
+        else:
             break
-        print("⇒ Address cannot be empty. Please enter your address.")
 
     while True:
         birth_date = input("Enter your birthday (YYYY-MM-DD): ").strip()
