@@ -34,6 +34,14 @@ def validate_date(date_str):
         print("⇒ Invalid date format. Please enter the date in YYYY-MM-DD format.")
         return None
 
+#calculate age function
+def calculate_age(birthday):
+    today = date.today()
+    age = today.year - birthday.year
+    if (today.month, today.day) < (birthday.month, birthday.day):
+        age -= 1
+    return age
+
 #user input function
 def user_input():
     name = input("Enter your name: ")
