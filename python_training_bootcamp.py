@@ -35,3 +35,36 @@ def user_input():
         "Birthday": birthday,
         "Age": age
     }
+
+#update excel function
+def update_excel():
+    if not os.path.exists(FILE_NAME):
+        print(f"⇒ {FILE_NAME} does not exist. Please create the file first.")
+        return False
+
+    user_data = user_input()
+
+    try:
+        df = pd.read_excel(FILE_NAME)
+
+        new_row = pd.DataFrame({
+            "Name": [user_data["Name"]],
+            "Email Address": [user_data["Email Address"]],
+            "Address": [user_data["Address"]],
+            "Birthday": [user_data["Birthday"]],
+            "Age": [user_data["Age"]]
+        })
+
+        df = pd.concat([df, new_row], ignore_index=True)
+
+        df.to_excel(FILE_NAME, index=False)
+        print(f"⇒ {FILE_NAME} updated successfully.")
+        print(f"⇒ Name: {user_data['Name']}\n⇒ Email Address: {user_data['Email Address']}\n⇒ Address: {user_data['Address']}\n⇒ Birthday: {user_data['Birthday']}\n⇒ Age: {user_data['Age']}")
+        return True
+    except PermissionError:
+        print(f"⇒ Permission denied: Unable to update {FILE_NAME}. Please check your file permissions.")
+        return False
+    except Exception as e:
+        print(f"⇒ An error occurred while updating {FILE_NAME}: {e}")
+        return False
+    
