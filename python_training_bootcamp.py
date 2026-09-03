@@ -3,11 +3,11 @@ import re
 import pandas as pd
 from datetime import datetime, date
 
-# Activity 1
+# Project constants
 FILE_NAME = "Python_Training_Bootcamp_Activity.xlsx"
 EXCEL_COLUMNS = ["Name", "Email Address", "Address", "Birthday", "Age"]
 
-#create excel function
+# Create a new Excel file and optionally add the first record.
 def create_excel():
     if os.path.exists(FILE_NAME):
         print(f"⇒ An excel file with the name {FILE_NAME} already exists.")
@@ -55,8 +55,7 @@ def create_excel():
         print(f"⇒ An error occurred while creating {FILE_NAME}: {e}")
         return False
     
-# Activity 2
-#validate date function
+# Validate date input and reject invalid or future birthdays.
 def validate_date(date_str):
     if not date_str or not date_str.strip():
         print("⇒ Date cannot be empty.")
@@ -72,7 +71,7 @@ def validate_date(date_str):
         print("⇒ Invalid date format. Please enter the date in YYYY-MM-DD format.")
         return None
 
-#calculate age function
+# Calculate age based on today's date.
 def calculate_age(birthday):
     today = date.today()
     age = today.year - birthday.year
@@ -80,7 +79,7 @@ def calculate_age(birthday):
         age -= 1
     return age
 
-#email validation function
+# Check whether the email format is valid.
 def validate_email(email):
     if not email or not email.strip():
         print("⇒ Email address cannot be empty.")
@@ -89,7 +88,7 @@ def validate_email(email):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.fullmatch(pattern, email.strip()) is not None
 
-#user input function
+# Collect and validate one person's details from the user.
 def user_input():
     print("\nPlease provide the following information:")
     while True:
@@ -130,7 +129,7 @@ def user_input():
         "Age": age
     }
 
-#update excel function
+# Add one record to the Excel file while keeping the birthday in YYYY-MM-DD format.
 def update_excel():
     if not os.path.exists(FILE_NAME):
         print(f"⇒ {FILE_NAME} does not exist. Please create the file first.")
@@ -179,7 +178,7 @@ def update_excel():
         print(f"⇒ An error occurred while updating {FILE_NAME}: {e}")
         return False
 
-# Main Menu
+# Show the available actions in the program menu.
 def display_menu():
     print("\nWelcome to the Python Training Bootcamp!")
     print("Please choose an option:")
@@ -187,6 +186,7 @@ def display_menu():
     print("2. Update Excel File")
     print("3. Exit")
 
+# Run the main application loop.
 def main():
     while True:
         display_menu()
