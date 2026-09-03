@@ -5,6 +5,8 @@ from datetime import datetime, date
 
 # Activity 1
 FILE_NAME = "Python_Training_Bootcamp_Activity.xlsx"
+EXCEL_COLUMNS = ["Name", "Email Address", "Address", "Birthday", "Age"]
+
 #create excel function
 def create_excel():
     if os.path.exists(FILE_NAME):
@@ -25,7 +27,7 @@ def create_excel():
                 print("⇒ Invalid choice. Please enter 1 or 2.")
 
     try:
-        df = pd.DataFrame(columns=["Name", "Email Address", "Address", "Birthday", "Age"])
+        df = pd.DataFrame(columns=EXCEL_COLUMNS)
         df.to_excel(FILE_NAME, index=False)
         print(f"⇒ {FILE_NAME} created successfully.")
         print(f"⇒ File path: {os.path.abspath(FILE_NAME)}")
@@ -83,9 +85,9 @@ def validate_email(email):
     if not email or not email.strip():
         print("⇒ Email address cannot be empty.")
         return False
-    
+
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(pattern, email) is not None
+    return re.fullmatch(pattern, email.strip()) is not None
 
 #user input function
 def user_input():
@@ -139,15 +141,18 @@ def update_excel():
     try:
         df = pd.read_excel(FILE_NAME)
 
-        new_row = pd.DataFrame({
-            "Name": [user_data["Name"]],
-            "Email Address": [user_data["Email Address"]],
-            "Address": [user_data["Address"]],
-            "Birthday": [user_data["Birthday"]],
-            "Age": [user_data["Age"]]
-        })
+        for column in EXCEL_COLUMNS:
+            if column not in df.columns:
+                df[column] = pd.NA
 
-        df = pd.concat([df, new_row], ignore_index=True)
+        row_index = len(df)
+        df.loc[row_index] = [
+            user_data["Name"],
+            user_data["Email Address"],
+            user_data["Address"],
+            user_data["Birthday"],
+            user_data["Age"]
+        ]
 
         df.to_excel(FILE_NAME, index=False)
         print(f"⇒ {FILE_NAME} updated successfully.")
