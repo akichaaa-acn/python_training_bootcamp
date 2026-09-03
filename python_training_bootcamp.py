@@ -6,8 +6,7 @@ FILE_NAME = "python_training_bootcamp.xlsx"
 #create excel function
 def create_excel():
     try:
-        df = pd.DataFrame(columns=["Name", "Email Address", "Address", "Birthday", "Phone Number"])
-
+        df = pd.DataFrame(columns=["Name", "Email Address", "Address", "Birthday", "Age"])
         df.to_excel(FILE_NAME, index=False)
         print(f"⇒ {FILE_NAME} created successfully.")
         print(f"⇒ File path: {os.path.abspath(FILE_NAME)}")
@@ -19,4 +18,3 @@ def create_excel():
     except Exception as e:
         print(f"⇒ An error occurred while creating {FILE_NAME}: {e}")
         return False
-
