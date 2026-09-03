@@ -145,18 +145,32 @@ def update_excel():
             if column not in df.columns:
                 df[column] = pd.NA
 
+        birthday_value = user_data["Birthday"].strftime("%Y-%m-%d")
+
         row_index = len(df)
         df.loc[row_index] = [
             user_data["Name"],
             user_data["Email Address"],
             user_data["Address"],
-            user_data["Birthday"],
+            birthday_value,
             user_data["Age"]
         ]
 
+        if "Birthday" in df.columns:
+            def normalize_birthday(value):
+                if pd.isna(value):
+                    return ""
+                if isinstance(value, pd.Timestamp):
+                    return value.strftime("%Y-%m-%d")
+                if hasattr(value, "strftime"):
+                    return value.strftime("%Y-%m-%d")
+                return str(value).strip()
+
+            df["Birthday"] = df["Birthday"].apply(normalize_birthday)
+
         df.to_excel(FILE_NAME, index=False)
         print(f"⇒ {FILE_NAME} updated successfully.")
-        print(f"⇒ Name: {user_data['Name']}\n⇒ Email Address: {user_data['Email Address']}\n⇒ Address: {user_data['Address']}\n⇒ Birthday: {user_data['Birthday']}\n⇒ Age: {user_data['Age']}")
+        print(f"⇒ Name: {user_data['Name']}\n⇒ Email Address: {user_data['Email Address']}\n⇒ Address: {user_data['Address']}\n⇒ Birthday: {birthday_value}\n⇒ Age: {user_data['Age']}")
         return True
     except PermissionError:
         print(f"⇒ Permission denied: Unable to update {FILE_NAME}. Please check your file permissions.")
