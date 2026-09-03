@@ -47,8 +47,13 @@ def user_input():
     name = input("Enter your name: ")
     email = input("Enter your email address: ")
     address = input("Enter your address: ")
-    birthday = input("Enter your birthday (YYYY-MM-DD): ")
-    age = input("Enter your age: ")
+    while True:
+        birth_date = input("Enter your birthday (YYYY-MM-DD): ").strip()
+        birthday = validate_date(birth_date)
+        if birthday:
+            break
+
+    age = calculate_age(birthday)
 
     return {
         "Name": name,
