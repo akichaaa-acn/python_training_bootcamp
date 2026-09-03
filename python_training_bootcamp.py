@@ -21,6 +21,19 @@ def create_excel():
         return False
 
 # Activity 2
+#validate date function
+def validate_date(date_str):
+    try:
+        birthday = datetime.strptime(date_str, "%Y-%m-%d").date()
+        if birthday > date.today():
+            print("⇒ Birthday cannot be in the future.")
+            return None
+        else:
+            return birthday
+    except ValueError:
+        print("⇒ Invalid date format. Please enter the date in YYYY-MM-DD format.")
+        return None
+
 #user input function
 def user_input():
     name = input("Enter your name: ")
