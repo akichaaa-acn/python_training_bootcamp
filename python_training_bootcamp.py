@@ -127,3 +127,31 @@ def update_excel():
     except Exception as e:
         print(f"⇒ An error occurred while updating {FILE_NAME}: {e}")
         return False
+
+# Main Menu
+def display_menu():
+    print("\nWelcome to the Python Training Bootcamp!")
+    print("Please choose an option:")
+    print("1. Create Excel File")
+    print("2. Update Excel File")
+    print("3. Exit")
+
+def main():
+    while True:
+        display_menu()
+        choice = input("Enter your choice (1, 2, or 3): ").strip()
+
+        if choice == "1":
+            create_excel()
+        elif choice == "2":
+            update_excel()
+        elif choice == "3":
+            print("Exiting the program. Goodbye!")
+            break
+        else:
+            print("⇒ Invalid choice. Please enter 1, 2, or 3.")
+
+        input("\nPress Enter to continue...")
+
+if __name__ == "__main__":
+    main()
