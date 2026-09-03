@@ -43,6 +43,11 @@ def calculate_age(birthday):
         age -= 1
     return age
 
+#email validation function
+def validate_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
 #user input function
 def user_input():
     name = input("Enter your name: ")
