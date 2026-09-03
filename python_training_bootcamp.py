@@ -4,23 +4,55 @@ import pandas as pd
 from datetime import datetime, date
 
 # Activity 1
-FILE_NAME = "python_training_bootcamp.xlsx"
+FILE_NAME = "Python_Training_Bootcamp_Activity.xlsx"
 #create excel function
 def create_excel():
+    if os.path.exists(FILE_NAME):
+        print(f"⇒ An excel file with the name {FILE_NAME} already exists.")
+        print("⇒ What would you like to do?")
+        print("1. Overwrite the existing file (this will delete all existing data)")
+        print("2. Cancel and go back to the main menu")
+
+        while True:
+            choice = input("Enter your choice (1 or 2): ").strip()
+            if choice == "1":
+                print(f"⇒ Overwriting {FILE_NAME}...")
+                break
+            elif choice == "2":
+                print("⇒ Operation cancelled. Returning to the main menu.")
+                return False
+            else:
+                print("⇒ Invalid choice. Please enter 1 or 2.")
+
     try:
         df = pd.DataFrame(columns=["Name", "Email Address", "Address", "Birthday", "Age"])
         df.to_excel(FILE_NAME, index=False)
         print(f"⇒ {FILE_NAME} created successfully.")
         print(f"⇒ File path: {os.path.abspath(FILE_NAME)}")
-        return True
 
+        print("\n Would you like to add a new record to the excel file?")
+        print("1. Yes add a record")
+        print("2. No (Return to main menu)")
+
+        while True:
+            choice = input("Enter your choice (1 or 2): ").strip()
+            if choice == "1":
+                update_excel()
+                break
+            elif choice == "2":
+                print("⇒ Returning to the main menu.")
+                break
+            else:
+                print("⇒ Invalid choice. Please enter 1 or 2.")
+        return True
+    
     except PermissionError:
-        print(f"⇒ Permission denied: Unable to create {FILE_NAME}. Please check your file permissions.")
+        print(f"⇒ Permission denied. Unable to create {FILE_NAME}.")
         return False
     except Exception as e:
         print(f"⇒ An error occurred while creating {FILE_NAME}: {e}")
         return False
-
+    
 # Activity 2
 #validate date function
 def validate_date(date_str):
