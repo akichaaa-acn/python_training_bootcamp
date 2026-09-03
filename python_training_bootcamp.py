@@ -50,9 +50,21 @@ def validate_email(email):
 
 #user input function
 def user_input():
-    name = input("Enter your name: ")
-    email = input("Enter your email address: ")
-    address = input("Enter your address: ")
+    while True:
+        name = input("Enter your name: ").strip
+        if name:
+            break
+    
+    while True:
+        email = input("Enter your email address: ").strip()
+        if validate_email(email):
+            break
+
+    while True:
+        address = input("Enter your address: ").strip()
+        if address:
+            break
+        
     while True:
         birth_date = input("Enter your birthday (YYYY-MM-DD): ").strip()
         birthday = validate_date(birth_date)
