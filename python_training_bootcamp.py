@@ -10,6 +10,7 @@ def create_excel():
 
         df.to_excel(FILE_NAME, index=False)
         print(f"⇒ {FILE_NAME} created successfully.")
+        print(f"⇒ File path: {os.path.abspath(FILE_NAME)}")
         return True
 
     except PermissionError:
