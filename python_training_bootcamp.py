@@ -4,10 +4,13 @@ import pandas as pd
 from datetime import datetime, date
 import win32com.client as win32
 
-
 # Project constants
 FILE_NAME = "Python_Training_Bootcamp_Activity.xlsx"
 EXCEL_COLUMNS = ["Name", "Email Address", "Address", "Birthday", "Age"]
+
+RECIPIENTS = [""]
+CC = [""]
+SUBJECT = "Python Training Bootcamp Activity"
 
 # Create a new Excel file and optionally add the first record.
 def create_excel():
