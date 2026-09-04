@@ -84,6 +84,16 @@ def calculate_age(birthday):
         age -= 1
     return age
 
+# Validate name to ensure it is not empty and contains only letters and spaces.
+def validate_name(name):
+    if not name or not name.strip():
+        print("⇒ Name cannot be empty.")
+        return False
+    if not re.match(r'^[A-Za-z\s]+$', name.strip()):
+        print("⇒ Name can only contain letters and spaces.")
+        return False
+    return True
+
 # Check whether the email format is valid.
 def validate_email(email):
     if not email or not email.strip():
@@ -98,7 +108,7 @@ def user_input():
     print("\nPlease provide the following information:")
     while True:
         name = input("Enter your name: ").strip()
-        if name:
+        if validate_name(name):
             break
         print("⇒ Name cannot be empty. Please enter your name.")
     
