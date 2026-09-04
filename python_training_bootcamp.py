@@ -94,6 +94,16 @@ def validate_name(name):
         return False
     return True
 
+# Validate address to ensure only specific special characters are allowed
+def validate_address(address):
+    if not address or not address.strip():
+        print("⇒ Address cannot be empty.")
+        return False
+    if not re.match(r'^[A-Za-z0-9\s,#\-/&()\'"]+$', address.strip()):
+        print("⇒ Address can only contain letters, numbers, spaces, and the following special characters: , . - # / & ( ) ' \"")
+        return False
+    return True
+
 # Check whether the email format is valid.
 def validate_email(email):
     if not email or not email.strip():
@@ -123,11 +133,10 @@ def user_input():
 
     while True:
         address = input("Enter your address: ").strip()
-        if address == "":
-            print("⇒ Address cannot be empty. Please enter your address.")
-        else:
+        if validate_address(address):
             break
-
+        print("⇒ Address cannot be empty. Please enter your address.")
+        
     while True:
         birth_date = input("Enter your birthday (YYYY-MM-DD): ").strip()
         birthday = validate_date(birth_date)
