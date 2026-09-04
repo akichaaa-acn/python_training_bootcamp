@@ -183,29 +183,65 @@ def update_excel():
         print(f"⇒ An error occurred while updating {FILE_NAME}: {e}")
         return False
 
+# Sends the excel file via email using Outlook.
+def email_excel():
+    if not os.path.exists(FILE_NAME):
+        print(f"⇒ {FILE_NAME} does not exist. Please create the file first.")
+        return False
+
+    try:
+        print("Connecting to Outlook...")
+        outlook = win32.Dispatch('outlook.application')
+        mail = outlook.CreateItem(0)
+
+        mail.To = ";".join(RECIPIENTS)
+        mail.CC = ";".join(CC)
+        mail.Subject = SUBJECT
+        mail.Body = "Please find the attached Excel file for the Python Training Bootcamp Activity."
+        mail.Attachments.Add(os.path.abspath(FILE_NAME))
+
+        print("Sending email...")
+        mail.Send()
+
+        print("⇒ Email sent successfully.")
+        print(f"⇒ To: {', '.join(RECIPIENTS)}")
+        print(f"⇒ CC: {', '.join(CC)}")
+        print(f"⇒ Subject: {SUBJECT}")
+        print(f"⇒ Attachment: {FILE_NAME}")
+        return True
+    except ImportError:
+        print("⇒ win32com.client module is not installed. Please install it using 'pip install pywin32'.")
+        return False
+    except Exception as e:
+        print(f"⇒ An error occurred while sending the email: {e}")
+        return False
+
 # Show the available actions in the program menu.
 def display_menu():
     print("\nWelcome to the Python Training Bootcamp!")
     print("Please choose an option:")
     print("1. Create Excel File")
     print("2. Update Excel File")
-    print("3. Exit")
+    print("3. Send Excel File via Email")
+    print("4. Exit")
 
 # Run the main application loop.
 def main():
     while True:
         display_menu()
-        choice = input("Enter your choice (1, 2, or 3): ").strip()
+        choice = input("Enter your choice (1, 2, 3, or 4): ").strip()
 
         if choice == "1":
             create_excel()
         elif choice == "2":
             update_excel()
         elif choice == "3":
+            email_excel()
+        elif choice == "4":
             print("Exiting the program. Goodbye!")
             break
         else:
-            print("⇒ Invalid choice. Please enter 1, 2, or 3.")
+            print("⇒ Invalid choice. Please enter 1, 2, 3, or 4.")
 
         input("\nPress Enter to continue...")
 
