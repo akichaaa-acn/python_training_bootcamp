@@ -60,7 +60,7 @@ def create_excel():
         print(f"⇒ An error occurred while creating {FILE_NAME}: {e}")
         return False
     
-# Validate date input and reject invalid or future birthdays.
+# Validate date input and reject invalid, future, or dates before 1900.
 def validate_date(date_str):
     if not date_str or not date_str.strip():
         print("⇒ Date cannot be empty.")
@@ -68,8 +68,15 @@ def validate_date(date_str):
     
     try:
         birthday = datetime.strptime(date_str, "%Y-%m-%d").date()
-        if birthday > date.today():
+        today = date.today()
+        if birthday > today:
             print("⇒ Birthday cannot be in the future.")
+            return None
+        elif birthday == today:
+            print("⇒ Birthday cannot be today. Please enter a valid past date.")
+            return None
+        elif birthday < date(1900, 1, 1):
+            print("⇒ Birthday cannot be before January 1, 1900. Please enter a valid date.")
             return None
         return birthday
     except ValueError:
@@ -136,7 +143,7 @@ def user_input():
         if validate_address(address):
             break
         print("⇒ Address cannot be empty. Please enter your address.")
-        
+
     while True:
         birth_date = input("Enter your birthday (YYYY-MM-DD): ").strip()
         birthday = validate_date(birth_date)
