@@ -2,10 +2,15 @@ import os
 import re
 import pandas as pd
 from datetime import datetime, date
+import win32com.client as win32
 
 # Project constants
 FILE_NAME = "Python_Training_Bootcamp_Activity.xlsx"
 EXCEL_COLUMNS = ["Name", "Email Address", "Address", "Birthday", "Age"]
+
+RECIPIENTS = [""]
+CC = [""]
+SUBJECT = "Python Training Bootcamp Activity"
 
 # Create a new Excel file and optionally add the first record.
 def create_excel():
@@ -55,7 +60,7 @@ def create_excel():
         print(f"⇒ An error occurred while creating {FILE_NAME}: {e}")
         return False
     
-# Validate date input and reject invalid or future birthdays.
+# Validate date input and reject invalid, future, or dates before 1900.
 def validate_date(date_str):
     if not date_str or not date_str.strip():
         print("⇒ Date cannot be empty.")
@@ -63,8 +68,15 @@ def validate_date(date_str):
     
     try:
         birthday = datetime.strptime(date_str, "%Y-%m-%d").date()
-        if birthday > date.today():
+        today = date.today()
+        if birthday > today:
             print("⇒ Birthday cannot be in the future.")
+            return None
+        elif birthday == today:
+            print("⇒ Birthday cannot be today. Please enter a valid past date.")
+            return None
+        elif birthday < date(1900, 1, 1):
+            print("⇒ Birthday cannot be before January 1, 1900. Please enter a valid date.")
             return None
         return birthday
     except ValueError:
@@ -78,6 +90,26 @@ def calculate_age(birthday):
     if (today.month, today.day) < (birthday.month, birthday.day):
         age -= 1
     return age
+
+# Validate name to ensure it is not empty and contains only letters and spaces.
+def validate_name(name):
+    if not name or not name.strip():
+        print("⇒ Name cannot be empty.")
+        return False
+    if not re.match(r'^[A-Za-z\s]+$', name.strip()):
+        print("⇒ Name can only contain letters and spaces.")
+        return False
+    return True
+
+# Validate address to ensure only specific special characters are allowed
+def validate_address(address):
+    if not address or not address.strip():
+        print("⇒ Address cannot be empty.")
+        return False
+    if not re.match(r'^[A-Za-z0-9\s,#\-/&()\'"]+$', address.strip()):
+        print("⇒ Address can only contain letters, numbers, spaces, and the following special characters: , . - # / & ( ) ' \"")
+        return False
+    return True
 
 # Check whether the email format is valid.
 def validate_email(email):
@@ -93,7 +125,7 @@ def user_input():
     print("\nPlease provide the following information:")
     while True:
         name = input("Enter your name: ").strip()
-        if name:
+        if validate_name(name):
             break
         print("⇒ Name cannot be empty. Please enter your name.")
     
@@ -108,10 +140,9 @@ def user_input():
 
     while True:
         address = input("Enter your address: ").strip()
-        if address == "":
-            print("⇒ Address cannot be empty. Please enter your address.")
-        else:
+        if validate_address(address):
             break
+        print("⇒ Address cannot be empty. Please enter your address.")
 
     while True:
         birth_date = input("Enter your birthday (YYYY-MM-DD): ").strip()
@@ -178,31 +209,68 @@ def update_excel():
         print(f"⇒ An error occurred while updating {FILE_NAME}: {e}")
         return False
 
+# Sends the excel file via email using Outlook.
+def email_excel():
+    if not os.path.exists(FILE_NAME):
+        print(f"⇒ {FILE_NAME} does not exist. Please create the file first.")
+        return False
+
+    try:
+        print("Connecting to Outlook...")
+        outlook = win32.Dispatch('outlook.application')
+        mail = outlook.CreateItem(0)
+
+        mail.To = ";".join(RECIPIENTS)
+        mail.CC = ";".join(CC)
+        mail.Subject = SUBJECT
+        mail.Body = "Please find the attached Excel file for the Python Training Bootcamp Activity."
+        mail.Attachments.Add(os.path.abspath(FILE_NAME))
+
+        print("Sending email...")
+        mail.Send()
+
+        print("⇒ Email sent successfully.")
+        print(f"⇒ To: {', '.join(RECIPIENTS)}")
+        print(f"⇒ CC: {', '.join(CC)}")
+        print(f"⇒ Subject: {SUBJECT}")
+        print(f"⇒ Attachment: {FILE_NAME}")
+        return True
+    except ImportError:
+        print("⇒ win32com.client module is not installed. Please install it using 'pip install pywin32'.")
+        return False
+    except Exception as e:
+        print(f"⇒ An error occurred while sending the email: {e}")
+        return False
+
 # Show the available actions in the program menu.
 def display_menu():
     print("\nWelcome to the Python Training Bootcamp!")
     print("Please choose an option:")
     print("1. Create Excel File")
     print("2. Update Excel File")
-    print("3. Exit")
+    print("3. Send Excel File via Email")
+    print("4. Exit")
 
 # Run the main application loop.
 def main():
     while True:
         display_menu()
-        choice = input("Enter your choice (1, 2, or 3): ").strip()
+        choice = input("Enter your choice (1, 2, 3, or 4): ").strip()
 
         if choice == "1":
             create_excel()
         elif choice == "2":
             update_excel()
         elif choice == "3":
+            email_excel()
+        elif choice == "4":
             print("Exiting the program. Goodbye!")
             break
         else:
-            print("⇒ Invalid choice. Please enter 1, 2, or 3.")
+            print("⇒ Invalid choice. Please enter 1, 2, 3, or 4.")
 
         input("\nPress Enter to continue...")
 
 if __name__ == "__main__":
     main()
+
